@@ -1,4 +1,4 @@
-#### Jetpack Compose Introduction
+## Jetpack Compose Introduction
 
 This is my very first Jetpack compose program. Seems fun!
 
