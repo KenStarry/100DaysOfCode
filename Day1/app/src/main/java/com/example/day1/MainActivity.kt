@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
 
-            val userName = "Kenneth"
+            val userName = "Jetpack Compose!"
 
             //  Hello world card
             Column(
