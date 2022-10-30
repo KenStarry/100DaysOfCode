@@ -1,4 +1,4 @@
-## Day 4 - Jetpack Compose States
+# Day 4 - Jetpack Compose States
 
 ### Description
 Today I wrote a simple program that shows the use of state management in Jetpack compose.
