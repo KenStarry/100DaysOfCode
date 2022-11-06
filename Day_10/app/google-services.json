@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "50739215464",
+    "project_id": "daysofcode---day-10",
+    "storage_bucket": "daysofcode---day-10.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:50739215464:android:517d2fc3f04cfdb193cfdd",
+        "android_client_info": {
+          "package_name": "com.example.day_10"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "50739215464-1mg36uk97lkfne4l32ultft3u5ovlmgc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpZd32m59vqHgDQy-3qc78LuImSI7nAko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "50739215464-1mg36uk97lkfne4l32ultft3u5ovlmgc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
