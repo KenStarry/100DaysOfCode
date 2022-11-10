@@ -72,7 +72,7 @@ fun ExpandableCard(
                 Text(
                     modifier = Modifier
                         .weight(6f),
-                    text = "My Title",
+                    text = title,
                     fontWeight = FontWeight.Bold,
                     fontSize = MaterialTheme.typography.titleSmall.fontSize,
                     maxLines = 1,
@@ -100,7 +100,9 @@ fun ExpandableCard(
             //  Show description if expanded
             if (expandedState) {
                 Text(
-                    text = title,
+                    text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+                            "Duis vitae augue eget diam commodo gravida interdum sed mi. " +
+                            "Duis mattis, augue nec laoreet ultrices, dui risus dictum neque,",
                     fontSize = MaterialTheme.typography.bodySmall.fontSize,
                     maxLines = 4,
                     overflow = TextOverflow.Ellipsis
