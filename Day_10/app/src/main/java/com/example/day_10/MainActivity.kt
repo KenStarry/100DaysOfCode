@@ -38,8 +38,6 @@ class MainActivity : ComponentActivity() {
     private lateinit var db: FirebaseFirestore
     private val TAG = "main activity"
 
-    private val liveNoteList = MutableLiveData<List<Note>>()
-
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,14 +79,23 @@ class MainActivity : ComponentActivity() {
                                 fontWeight = FontWeight.ExtraBold
                             )
                         }
-                        Toast.makeText(this@MainActivity, queryNotes().size.toString(), Toast.LENGTH_SHORT).show()
+
+                        val myNotesArraylist = ArrayList<Note>()
+
+
+                        queryNotes { notes ->
+                            myNotesArraylist.addAll(notes)
+
+//                            myList = notes
+                        }
 
                         //  Notes List
                         LazyColumn(
                             content = {
 
                                 itemsIndexed(
-                                    liveNoteList as List<Note>
+                                    myNotesArraylist
+
                                 ) { index, item ->
 
                                     NoteCard(item.noteTitle, item.noteDesc)
@@ -177,9 +184,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun queryNotes(): List<Note> {
-
-        var notes: ArrayList<Note> = ArrayList()
+    private fun queryNotes(
+        myNotes: (ArrayList<Note>) -> Unit
+    ) {
 
         db.collection("notes")
             .addSnapshotListener { querySnapshot, err ->
@@ -196,10 +203,8 @@ class MainActivity : ComponentActivity() {
                     notesArrayList.add(note)
                 }
 
-                liveNoteList.value = notesArrayList
+                myNotes(notesArrayList)
             }
-
-        return notes
     }
 
     private fun addNoteToDatabase(note: Note) {
