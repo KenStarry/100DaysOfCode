@@ -100,9 +100,7 @@ fun ExpandableCard(
             //  Show description if expanded
             if (expandedState) {
                 Text(
-                    text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-                            "Duis vitae augue eget diam commodo gravida interdum sed mi. " +
-                            "Duis mattis, augue nec laoreet ultrices, dui risus dictum neque,",
+                    text = title,
                     fontSize = MaterialTheme.typography.bodySmall.fontSize,
                     maxLines = 4,
                     overflow = TextOverflow.Ellipsis
