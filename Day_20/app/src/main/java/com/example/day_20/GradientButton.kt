@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -23,10 +24,12 @@ fun GradientButton(
 ) {
 
     Button(
+        modifier = Modifier
+            .size(width = 150.dp, height = 60.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent
         ),
-        contentPadding = PaddingValues(),
+        contentPadding = PaddingValues(0.dp),
         onClick = { onClick() }
     ) {
         Box(

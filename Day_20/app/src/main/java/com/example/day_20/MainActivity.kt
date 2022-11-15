@@ -3,6 +3,7 @@ package com.example.day_20
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +28,12 @@ class MainActivity : ComponentActivity() {
 
                 Box(
                     modifier = Modifier
+                        .background(Brush.verticalGradient(
+                            colors = listOf(
+                                Color(0xFFFC5C7D),
+                                Color(0xFF6A82FB)
+                            )
+                        ))
                         .fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
