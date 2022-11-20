@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.day_24.screens.DetailScreen
+import com.example.day_24.screens.MainScreen
 import com.example.day_24.screens.bottom_nav_screens.HomeScreen
 import com.example.day_24.screens.bottom_nav_screens.OrdersScreen
 import com.example.day_24.screens.bottom_nav_screens.ProfileScreen
@@ -21,7 +23,7 @@ fun RootNavController(
 
         //  Home screen composable
         composable(route = BottomNavScreens.Home.route) {
-            HomeScreen()
+            HomeScreen(navHostController)
         }
 
         //  Home screen composable
@@ -37,6 +39,15 @@ fun RootNavController(
         //  Home screen composable
         composable(route = BottomNavScreens.Profile.route) {
             ProfileScreen()
+        }
+
+        //  Home screen composable
+        composable(route = Screens.DetailScreen.route) {
+            DetailScreen()
+        }
+
+        composable(route = Screens.MainScreen.route) {
+            MainScreen()
         }
     }
 

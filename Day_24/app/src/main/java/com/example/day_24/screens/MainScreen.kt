@@ -32,7 +32,7 @@ fun MainScreen(
     val navController = rememberNavController()
 
     Scaffold(
-        topBar = { TopBar() },
+        topBar = { TopBar(navHostController = navController) },
         bottomBar = { BottomBar(navHostController = navController) }
     ) { contentPadding ->
 
@@ -57,39 +57,62 @@ fun MainScreenPreview() {
 //  top app bar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar() {
+fun TopBar(
+    navHostController: NavHostController
+) {
 
-    TopAppBar(
-        title = {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "Home",
-                    fontSize = MaterialTheme.typography.titleSmall.fontSize,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        },
-        navigationIcon = {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    imageVector = Icons.Outlined.Menu,
-                    contentDescription = "Menu Icon"
-                )
-            }
-        },
-        actions = {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    imageVector = Icons.Outlined.Notifications,
-                    contentDescription = "Notification Icon"
-                )
-            }
-        }
+    //  the screens taht will make our top App Bar show
+    val screens = listOf(
+        BottomNavScreens.Home,
+        BottomNavScreens.Orders,
+        BottomNavScreens.Wallet,
+        BottomNavScreens.Profile
     )
+
+    val navBackStackEntry by navHostController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
+    val validDestinations = screens.any {
+        //  if any of the screens matches
+        it.route == currentDestination?.route
+    }
+
+    if (validDestinations) {
+        TopAppBar(
+            title = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Home",
+                        fontSize = MaterialTheme.typography.titleMedium.fontSize,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            navigationIcon = {
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(
+                        imageVector = Icons.Outlined.Menu,
+                        contentDescription = "Menu Icon"
+                    )
+                }
+            },
+            actions = {
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(
+                        imageVector = Icons.Outlined.Notifications,
+                        contentDescription = "Notification Icon"
+                    )
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.onPrimary
+            )
+        )
+    }
 }
 
 
@@ -108,18 +131,21 @@ fun BottomBar(
 
     val navBackStackEntry by navHostController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+    val bottomBarDestination = screens.any { it.route == currentDestination?.route }
 
-    NavigationBar(
-        containerColor = MaterialTheme.colorScheme.onPrimary
-    ) {
-        screens.forEach { screen ->
+    if (bottomBarDestination) {
+        NavigationBar(
+            containerColor = MaterialTheme.colorScheme.onPrimary
+        ) {
+            screens.forEach { screen ->
 
-            //  create a navigation bar item
-            NavBarItem(
-                screen = screen,
-                currentDestination = currentDestination,
-                navHostController = navHostController
-            )
+                //  create a navigation bar item
+                NavBarItem(
+                    screen = screen,
+                    currentDestination = currentDestination,
+                    navHostController = navHostController
+                )
+            }
         }
     }
 }
