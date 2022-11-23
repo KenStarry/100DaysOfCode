@@ -18,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -26,12 +27,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.example.day_10.ui.theme.Day_10Theme
 import com.example.day_10.ui.theme.Note
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.text.input.TextFieldValue
 
 class MainActivity : ComponentActivity() {
 
@@ -58,6 +62,12 @@ class MainActivity : ComponentActivity() {
                     }
                 ) { contentPadding ->
 
+
+                    val myNotesArraylist = remember {
+                        mutableStateListOf<Note>()
+                    }
+                    val context = LocalContext.current
+
                     //  Notes main content
                     Column(
                         modifier = Modifier
@@ -65,7 +75,7 @@ class MainActivity : ComponentActivity() {
                             .padding(contentPadding),
                         horizontalAlignment = Alignment.Start
                     ) {
-                        
+
                         Spacer(modifier = Modifier.height(24.dp))
 
                         Box(
@@ -80,13 +90,8 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        val myNotesArraylist = ArrayList<Note>()
-
-
                         queryNotes { notes ->
                             myNotesArraylist.addAll(notes)
-
-//                            myList = notes
                         }
 
                         //  Notes List
@@ -107,74 +112,17 @@ class MainActivity : ComponentActivity() {
                                 .weight(6f)
                         )
 
-                        var titleTextState by remember {
-                            mutableStateOf("")
+                        val titleTextState = remember {
+                            mutableStateOf(TextFieldValue(""))
+                        }
+                        val textValueState = remember {
+                            mutableStateOf(TextFieldValue(""))
                         }
 
-                        //  Note title text Field
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(horizontal = 16.dp)
-                        ) {
-                            TextField(
-                                value = titleTextState,
-                                label = {
-                                    Text(text = "Note Title")
-                                },
-                                onValueChange = {
-                                    titleTextState = it
-                                }
-                            )
-                        }
-
-                        //  add note button and textfield
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(2f)
-                                .padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-
-                            var textValueState by remember {
-                                mutableStateOf("")
-                            }
-
-                            TextField(
-                                modifier = Modifier
-                                    .height(100.dp)
-                                    .weight(3f),
-                                value = textValueState,
-                                label = {
-                                    Text(text = "Note Description")
-                                },
-                                onValueChange = {
-                                    textValueState = it
-                                }
-                            )
-
-                            Spacer(modifier = Modifier.width(16.dp))
-
-                            Button(
-                                modifier = Modifier
-                                    .height(50.dp)
-                                    .weight(1f),
-                                onClick = {
-
-                                    val note = Note(titleTextState, textValueState)
-
-                                    //  Submit the note to the database
-                                    addNoteToDatabase(note)
-                                }
-                            ) {
-                                Text(
-                                    text = "Add"
-                                )
-                            }
-
-                        }
+                        TextViews(
+                            titleState = titleTextState,
+                            descState = textValueState
+                        )
 
                     }
 
@@ -212,12 +160,85 @@ class MainActivity : ComponentActivity() {
         db.collection("notes").add(note)
             .addOnSuccessListener {
                 Log.d(TAG, "Note Added successfully")
-                Toast.makeText(this@MainActivity, "Note added successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Note added successfully", Toast.LENGTH_SHORT)
+                    .show()
             }
             .addOnFailureListener {
                 Log.d(TAG, "Error : $it")
-                Toast.makeText(this@MainActivity, "Oops! something went wrong...", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "Oops! something went wrong...",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun ColumnScope.TextViews(
+        titleState: MutableState<TextFieldValue>,
+        descState: MutableState<TextFieldValue>,
+    ) {
+        //  Note title text Field
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 16.dp)
+        ) {
+            TextField(
+                value = titleState.value,
+                label = {
+                    Text(text = "Note Title")
+                },
+                onValueChange = {
+                    titleState.value = it
+                }
+            )
+        }
+
+        //  add note button and textfield
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(2f)
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+
+            TextField(
+                modifier = Modifier
+                    .height(100.dp)
+                    .weight(3f),
+                value = descState.value,
+                label = {
+                    Text(text = "Note Description")
+                },
+                onValueChange = {
+                    descState.value = it
+                }
+            )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Button(
+                modifier = Modifier
+                    .height(50.dp)
+                    .weight(1f),
+                onClick = {
+
+                    val note = Note(titleState.value.toString(), descState.value.toString())
+
+                    //  Submit the note to the database
+                    addNoteToDatabase(note)
+                }
+            ) {
+                Text(
+                    text = "Add"
+                )
+            }
+
+        }
     }
 }
 
@@ -291,6 +312,7 @@ fun NoteCard(
     }
 
 }
+
 
 
 

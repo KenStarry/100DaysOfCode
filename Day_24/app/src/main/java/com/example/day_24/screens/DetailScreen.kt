@@ -5,16 +5,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Send
-import androidx.compose.material.icons.sharp.ArrowBack
-import androidx.compose.material.icons.sharp.Favorite
+import androidx.compose.material.icons.sharp.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,6 +28,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import com.example.day_24.R
 import com.example.day_24.ui.theme.Accent
 import com.example.day_24.ui.theme.AccentLight
+import com.example.day_24.ui.theme.StarIconColor
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
@@ -50,8 +55,10 @@ fun DetailScreen() {
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.onPrimary)
-                .padding(contentPadding),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+                .padding(contentPadding)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -84,9 +91,9 @@ fun DetailScreen() {
                     Icon(
                         modifier = Modifier
                             .size(18.dp),
-                        imageVector = Icons.Sharp.Favorite,
+                        imageVector = Icons.Sharp.Star,
                         contentDescription = "Favourite icon",
-                        tint = Accent
+                        tint = StarIconColor
                     )
 
                     Spacer(modifier = Modifier.width(4.dp))
@@ -100,7 +107,7 @@ fun DetailScreen() {
 
             }
 
-            //  lazy row
+            //  categories
             LazyRow(
                 content = {
                     itemsIndexed(
@@ -122,33 +129,99 @@ fun DetailScreen() {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
 
-                Text(
-                    buildAnnotatedString {
-                        withStyle(
-                            style = SpanStyle(
-                                fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                                fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
-                                color = MaterialTheme.typography.bodySmall.color
-                            )
-                        ){
-                            append("Ksh")
-                        }
-                        withStyle(
-                            style = SpanStyle(
-                                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                                fontWeight = MaterialTheme.typography.bodyLarge.fontWeight,
-                                color = MaterialTheme.typography.bodyLarge.color
-                            )
-                        ){
-                            append("1,500")
-                        }
-                    },
-                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                    fontWeight = FontWeight.Bold
+                //  price
+                SmallAndLargeText(
+                    modifier = Modifier
+                        .padding(16.dp),
+                    smallText = "Ksh ",
+                    largeText = "550"
                 )
 
+                //  quantity
+                QuantityCounter()
 
             }
+
+            //  About section
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp),
+                text = "About Sushi",
+                fontSize = MaterialTheme.typography.titleMedium.fontSize,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1
+            )
+
+            //  About section
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .align(Alignment.CenterHorizontally),
+                text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
+                        "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " +
+                        "Ut enim ad minim veniam, laboris nisi ut aliquip ex ea commodo consequat. ",
+                fontSize = MaterialTheme.typography.titleMedium.fontSize,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.typography.bodyMedium.color.copy(alpha = 0.3f),
+                maxLines = 4,
+                overflow = TextOverflow.Ellipsis
+            )
+
+            //  place order section
+            Box(
+                modifier = Modifier
+                    .width(280.dp)
+                    .height(100.dp)
+                    .clip(RoundedCornerShape(24.dp)),
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.onSecondary),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    //  total price column
+                    Column(
+                        modifier = Modifier
+                            .weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+
+                        //  price
+                        SmallAndLargeText(
+                            smallText = "Ksh ",
+                            largeText = "550"
+                        )
+                        
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = "Total Price",
+                            fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                            fontWeight = FontWeight.Normal
+                        )
+
+                    }
+
+                    //  place order button
+                    Box(
+                        modifier = Modifier
+                            .weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+
+                        Button(onClick = { /*TODO*/ }) {
+                            Text(text = "Place Order")
+                        }
+
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
 
         }
 
@@ -294,10 +367,119 @@ fun PillItem(
     }
 }
 
+//  annotated string
+@Composable
+fun SmallAndLargeText(
+    modifier: Modifier = Modifier,
+    smallText: String,
+    largeText: String
+) {
+
+    Text(
+        buildAnnotatedString {
+            withStyle(
+                style = SpanStyle(
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.typography.bodySmall.color,
+                )
+            ) {
+                append(smallText)
+            }
+            withStyle(
+                style = SpanStyle(
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = MaterialTheme.typography.bodyLarge.color
+                )
+            ) {
+                append(largeText)
+            }
+        },
+        modifier.padding(horizontal = 8.dp)
+    )
+
+}
+
+//  quantity counter
+@Composable
+fun QuantityCounter() {
+
+    var counterText by remember {
+        mutableStateOf(1)
+    }
+
+    Box(
+        modifier = Modifier
+            .wrapContentWidth()
+            .wrapContentHeight()
+            .clip(RoundedCornerShape(30.dp))
+    ) {
+
+        //  add and minus button
+        Row(
+            modifier = Modifier
+                .wrapContentWidth()
+                .wrapContentHeight()
+                .background(MaterialTheme.colorScheme.onSecondary)
+                .padding(
+                    horizontal = 8.dp,
+                    vertical = 8.dp
+                ),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            //  minus icon
+            IconButton(onClick = {
+                if (counterText > 1) {
+                    counterText -= 1
+                }
+            }) {
+                Icon(
+                    imageVector = Icons.Sharp.Remove,
+                    contentDescription = "Minus Icon",
+                    tint = MaterialTheme.typography.titleLarge.color.copy(alpha = 0.6f)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(4.dp))
+
+            Text(
+                text = counterText.toString(),
+                fontWeight = FontWeight.Bold,
+                fontSize = 24.sp,
+                color = MaterialTheme.typography.titleLarge.color
+            )
+
+            Spacer(modifier = Modifier.width(4.dp))
+
+            //  plus icon
+            IconButton(onClick = {
+                counterText += 1
+            }) {
+                Icon(
+                    imageVector = Icons.Sharp.Add,
+                    contentDescription = "Plus Icon",
+                    tint = MaterialTheme.typography.titleLarge.color.copy(alpha = 0.6f)
+                )
+            }
+
+        }
+
+    }
+}
+
 @Preview
 @Composable
 fun PillPrev() {
     PillItem("Saushi")
+}
+
+@Preview
+@Composable
+fun QuantityPrev() {
+    QuantityCounter()
 }
 
 @Preview
