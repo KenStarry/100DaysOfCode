@@ -63,4 +63,10 @@ dependencies {
 
     //  Sheets Dialog
     implementation "com.maxkeppeler.sheets-compose-dialogs:core:<version>"
+
+    // CALENDAR
+    implementation "com.maxkeppeler.sheets-compose-dialogs:calendar:<version>"
+
+    // CLOCK
+    implementation "com.maxkeppeler.sheets-compose-dialogs:clock:<version>"
 }
